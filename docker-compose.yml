@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  auth-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: authuser
+      POSTGRES_PASSWORD: authpass
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  user-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "8081:8080"
+    depends_on:
+      - auth-db
+      - user-db
+      - auth-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-db:5432/userdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://auth-service:8080/.well-known/jwks.json
+
+volumes:
+  auth-db-data:
+  user-db-data:
