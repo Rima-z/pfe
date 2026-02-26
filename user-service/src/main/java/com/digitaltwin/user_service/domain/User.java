@@ -2,6 +2,7 @@ package com.digitaltwin.user_service.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
@@ -24,9 +25,10 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile_id")
-    private Profile profile;
+        @OneToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "profile_id")
+        @JsonManagedReference
+        private Profile profile;
 
     @ManyToMany
     @JoinTable(

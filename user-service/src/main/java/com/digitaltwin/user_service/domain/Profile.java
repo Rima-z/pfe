@@ -2,6 +2,7 @@ package com.digitaltwin.user_service.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
@@ -21,5 +22,6 @@ public class Profile {
     private String address;
 
     @OneToOne(mappedBy = "profile")
+    @JsonBackReference
     private User user;
 }
